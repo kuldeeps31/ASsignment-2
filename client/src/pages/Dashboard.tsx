@@ -1,44 +1,97 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiPlus, FiTrash2, FiLogOut } from 'react-icons/fi';
-import '../styles/Dashboard.css'
+import '../styles/Dashboard.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+//import jwtde from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
-const Dashboard = () => {
-  // Get user data from localStorage
-//  const user = JSON.parse(localStorage.getItem('user') || {
-//    name: 'Guest',
-//    email: 'guest@example.com'
-//  };
+interface Note {
+  _id: string;
+  text: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
-  const [notes, setNotes] = useState<Array<{id: string, content: string}>>([]);
+interface DecodedToken {
+  name: string;
+  email: string;
+  exp: number;
+  iat: number;
+}
+
+const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+
+  const [notes, setNotes] = useState<Note[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newNote, setNewNote] = useState('');
+   const [userName, setUserName] = useState('Guest');
+  const [userEmail, setUserEmail] = useState('guest@example.com');
 
-  const handleCreateNote = () => {
-    if (!newNote.trim()) return;
-    
-    const note = {
-      id: Date.now().toString(),
-      content: newNote
-    };
-    
-    setNotes([...notes, note]);
-    setNewNote('');
-    setIsCreating(false);
+
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+         console.log("Decoded Token:", decoded);
+        setUserName(decoded.name);
+        console.log(decoded.name);
+        setUserEmail(decoded.email);
+      } catch (err) {
+        console.error('Invalid token');
+      }
+    }
+
+    fetchNotes();
+  }, []);
+
+  // Fetch all notes
+  const fetchNotes = async () => {
+    try {
+      const res = await axios.get('http://localhost:9000/api/notes');
+      setNotes(res.data);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+    }
   };
 
-  const handleDeleteNote = (id: string) => {
-    setNotes(notes.filter(note => note.id !== id));
+  // Create a new note
+  const handleCreateNote = async () => {
+    if (!newNote.trim()) return;
+    try {
+      const res = await axios.post('http://localhost:9000/api/notes', { text: newNote });
+      setNotes([res.data, ...notes]);
+      setNewNote('');
+      setIsCreating(false);
+    } catch (error) {
+      console.error('Error creating note:', error);
+    }
+  };
+
+  // Delete a note
+  const handleDeleteNote = async (id: string) => {
+    try {
+      await axios.delete(`http://localhost:9000/api/notes/${id}`);
+      setNotes(notes.filter(note => note._id !== id));
+    } catch (error) {
+      console.error('Error deleting note:', error);
+    }
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    window.location.href = '/signin';
+    localStorage.removeItem("token");
+    navigate("/");
   };
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
 
   return (
     <div className="dashboard-container">
-      {/* Header */}
       <header className="dashboard-header">
         <h1>Dashboard</h1>
         <button onClick={handleLogout} className="logout-btn">
@@ -46,23 +99,18 @@ const Dashboard = () => {
         </button>
       </header>
 
-      {/* User Info */}
-      <div className="user-info">
-        <h2>Welcome, kuldeep</h2>
-        <p>kuldeep@gmail.com</p>
+          <div className="user-info">
+        <h2>Welcome, {userName}</h2>
+        <p>{userEmail}</p>
       </div>
 
-      {/* Create Note Button */}
+
       {!isCreating && (
-        <button 
-          onClick={() => setIsCreating(true)}
-          className="create-note-btn"
-        >
+        <button onClick={() => setIsCreating(true)} className="create-note-btn">
           <FiPlus /> Create Note
         </button>
       )}
 
-      {/* Note Creation Form */}
       {isCreating && (
         <div className="note-form">
           <textarea
@@ -72,28 +120,20 @@ const Dashboard = () => {
             rows={4}
           />
           <div className="form-actions">
-            <button onClick={() => setIsCreating(false)} className="cancel-btn">
-              Cancel
-            </button>
-            <button onClick={handleCreateNote} className="save-btn">
-              Add Note
-            </button>
+            <button onClick={() => setIsCreating(false)} className="cancel-btn">Cancel</button>
+            <button onClick={handleCreateNote} className="save-btn">Add Note</button>
           </div>
         </div>
       )}
 
-      {/* Notes List */}
       <div className="notes-list">
         {notes.length === 0 ? (
           <p className="empty-notes">No notes yet. Create your first note!</p>
         ) : (
           notes.map(note => (
-            <div key={note.id} className="note-card">
-              <p>{note.content}</p>
-              <button 
-                onClick={() => handleDeleteNote(note.id)}
-                className="delete-btn"
-              >
+            <div key={note._id} className="note-card">
+              <p>{note.text}</p>
+              <button onClick={() => handleDeleteNote(note._id)} className="delete-btn">
                 <FiTrash2 /> Delete
               </button>
             </div>

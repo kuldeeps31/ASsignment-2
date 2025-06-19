@@ -41,7 +41,6 @@ export const signup = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
 export const login = async (req: Request, res: Response) => {
   const { email, password, rememberMe } = req.body;
 
@@ -52,27 +51,21 @@ export const login = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("User found:");
-    console.log("DB Password:", user.password);
-    console.log("Entered Password:", password);
-
     const isMatch = await bcrypt.compare(password, user.password);
-
-    console.log("Password match result:", isMatch);
-
     if (!isMatch)
       return res.status(401).json({ message: "Incorrect password" });
 
+    // ✅ FIXED: Include `name` in token
     const token = jwt.sign(
-      { email: user.email },
+      { name: user.name, email: user.email },
       process.env.JWT_SECRET!,
       { expiresIn: rememberMe ? "7d" : "1h" }
     );
 
+    // 🔁 Respond with token and user (optional)
     res.status(200).json({
       message: "Login successful",
       token,

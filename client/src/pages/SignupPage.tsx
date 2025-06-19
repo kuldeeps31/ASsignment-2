@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCalendar, FiArrowRight } from 'react-icons/fi';
 import SigninPopup from './SigninPage';
 import '../styles/Auth.css'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SignupPage = () => {
   const [form, setForm] = useState({
@@ -15,27 +17,60 @@ const SignupPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSignin, setShowSignin] = useState(false);
 
+  const Navigate=useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const newErrors: Record<string, string> = {};
+  useEffect(() => {
+  const query = new URLSearchParams(window.location.search);
+  const token = query.get("token");
 
-    if (!form.name) newErrors.name = 'Name is required';
-    if (!form.dob) newErrors.dob = 'Date of birth is required';
-    if (!form.email.includes('@')) newErrors.email = 'Invalid email';
-    if (form.password.length < 6) newErrors.password = 'Password must be 6+ characters';
+  if (token) {
+    localStorage.setItem("auth_token", token);
+    console.log("User logged in with Google. Token:", token);
+  } else {
+    console.warn("No token found in URL");
+  }
+}, []);
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+   
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const newErrors: Record<string, string> = {};
+
+  if (!form.name) newErrors.name = 'Name is required';
+  if (!form.dob) newErrors.dob = 'Date of birth is required';
+  if (!form.email.includes('@')) newErrors.email = 'Invalid email';
+  if (form.password.length < 6) newErrors.password = 'Password must be 6+ characters';
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:9000/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "Signup failed");
+    } else {
+      localStorage.setItem("auth_token", data.token); // ✅ store JWT
+      toast("Signup successful!");
+      //window.location.href = "/dashboard"; // ✅ Redirect
+      //Navigate('/si');
     }
-
-    console.log('Signup form submitted:', form);
-    // API call would go here
-  };
+  } catch (error) {
+    alert("Something went wrong");
+    console.error(error);
+  }
+};
 
   return (
     <div className="auth-container">
@@ -120,10 +155,11 @@ const SignupPage = () => {
         </div>
 
         {/* Google Signup */}
-        <button className="google-btn">
-          <FcGoogle /> Continue with Google
-        </button>
-
+        <a href="http://localhost:9000/api/auth/google">
+  <button className="google-btn">
+    <FcGoogle /> Continue with Google
+  </button>
+</a>
         {/* Signin Link */}
         <p className="auth-footer">
           Already have an account?{' '}
