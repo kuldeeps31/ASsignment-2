@@ -1,13 +1,11 @@
 import express from 'express';
-import { getNotes, createNote, deleteNote } from '../controllers/notesController';
+import { createNote, getNotes, deleteNote } from '../controllers/notesController';
+import { protect } from '../middlewares/auth';
 
 const router = express.Router();
 
-router.get('/', getNotes);
-router.post('/', createNote);
-router.delete('/:id', deleteNote);
+router.get('/', protect, getNotes);
+router.post('/', protect, createNote);
+router.delete('/:id', protect, deleteNote);
 
 export default router;
-
-
-

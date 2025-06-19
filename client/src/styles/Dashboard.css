@@ -1,94 +1,211 @@
-/* Dashboard Styles */
-.dashboard-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Inter', sans-serif;
+/* Dashboard.css */
+:root {
+  --primary: #2d5bf4;
+  --primary-hover: #2d5bf4;
+  --text: #1f2937;
+  --text-light: #6b7280;
+  --bg: #f9fafb;
+  --card-bg: #ffffff;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
 }
 
+/* Base Styles */
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--bg);
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Background Effects */
+.dashboard-container::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.dashboard-container::after {
+  content: '';
+  position: absolute;
+  bottom: -100px;
+  left: -100px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(79, 70, 229, 0.1) 0%, transparent 70%);
+  z-index: 0;
+}
+
+/* Header */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 1;
 }
 
 .dashboard-header h1 {
   font-size: 1.8rem;
-  color: #111827;
+  font-weight: 700;
+  color: var(--primary);
 }
 
 .logout-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s;
 }
 
 .logout-btn:hover {
-  background: #dc2626;
+  background: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
+/* User Info */
 .user-info {
-  margin-bottom: 2rem;
   text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .user-info h2 {
   font-size: 1.5rem;
-  color: #111827;
   margin-bottom: 0.5rem;
 }
 
 .user-info p {
-  color: #6b7280;
+  color: var(--text-light);
+  font-size: 0.9rem;
 }
 
-.create-note-btn {
+/* Notes Section */
+.notes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.empty-notes {
+  text-align: center;
+  color: var(--text-light);
+  grid-column: 1 / -1;
+  padding: 2rem;
+}
+
+/* Note Card */
+.note-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+}
+
+.note-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.note-card p {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.delete-btn {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #2563eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  align-self: flex-end;
+}
+
+.delete-btn:hover {
+  background: var(--danger-hover);
+}
+
+/* Create Note Button */
+.create-note-btn {
+  background: var(--primary);
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 6px;
-  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 500;
-  margin: 0 auto 2rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.3s;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .create-note-btn:hover {
-  background: #1d4ed8;
+  background: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
+/* Note Form */
 .note-form {
-  background: #f9fafb;
-  border-radius: 8px;
+  background: var(--card-bg);
+  border-radius: 10px;
   padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
 .note-form textarea {
   width: 100%;
-  padding: 0.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
+  padding: 1rem;
+  font-family: inherit;
   font-size: 1rem;
-  resize: vertical;
+  resize: none;
   margin-bottom: 1rem;
+  min-height: 120px;
+  transition: border-color 0.3s;
+}
+
+.note-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .form-actions {
@@ -98,67 +215,67 @@
 }
 
 .cancel-btn {
-  background: #f3f4f6;
-  color: #111827;
+  background: #e5e7eb;
+  color: var(--text);
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
-  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cancel-btn:hover {
+  background: #d1d5db;
 }
 
 .save-btn {
-  background: #10b981;
+  background: var(--primary);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 6px;
-  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s;
 }
 
-.notes-list {
-  display: grid;
-  gap: 1rem;
+.save-btn:hover {
+  background: var(--primary-hover);
 }
 
-.note-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-.note-card p {
-  margin-bottom: 1rem;
-  color: #111827;
-}
-
-.delete-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: #fef2f2;
-  color: #ef4444;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.empty-notes {
-  text-align: center;
-  color: #6b7280;
-  padding: 2rem;
-  background: #f9fafb;
-  border-radius: 8px;
-}
-
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .notes-list {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-container::before,
+  .dashboard-container::after {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
   .dashboard-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .note-form {
     padding: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cancel-btn,
+  .save-btn {
+    width: 100%;
   }
 }

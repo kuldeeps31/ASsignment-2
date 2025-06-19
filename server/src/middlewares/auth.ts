@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import { IUser } from '../interfaces/IUser';
 
-interface AuthenticatedRequest extends Request {
-  user?: IUser;
+export interface AuthenticatedRequest extends Request {
+  user?: IUser & { _id: string };
 }
 
 export const protect = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -17,23 +17,21 @@ export const protect = async (req: AuthenticatedRequest, res: Response, next: Ne
   if (!token) {
     res.status(401).json({
       success: false,
-      error: 'Not authorized to access this route'
+      error: 'Not authorized to access this route',
     });
     return;
   }
 
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
-
-    // Get user from the token
-    req.user = await User.findById(decoded.id).select('-password') as IUser;
-
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+console.log("Decoded JWT:", decoded);
+    req.user = await User.findById(decoded.id).select('-password') as IUser & { _id: string };
+console.log("req.user:", req.user);
     next();
   } catch (error) {
     res.status(401).json({
       success: false,
-      error: 'Not authorized'
+      error: 'Not authorized',
     });
   }
 };

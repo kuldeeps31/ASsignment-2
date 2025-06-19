@@ -5,7 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { FcGoogle } from 'react-icons/fc';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiX } from 'react-icons/fi';
-import '../styles/Auth.css';
+//import '../styles/Auth.css';
+import '../styles/SigninPage.css'
 
 type Props = {
   onClose: () => void;
@@ -122,7 +123,7 @@ const SigninPopup: React.FC<Props> = ({ onClose }) => {
 
         <p className="auth-footer">
           Need an account?{' '}
-          <a href="#signup" className="auth-link">Create one</a>
+          <a href="/" className="auth-link">Create one</a>
         </p>
       </div>
     </div>

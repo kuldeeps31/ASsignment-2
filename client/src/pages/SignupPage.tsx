@@ -23,16 +23,23 @@ const SignupPage = () => {
   };
 
   useEffect(() => {
-  const query = new URLSearchParams(window.location.search);
-  const token = query.get("token");
-
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
   if (token) {
-    localStorage.setItem("auth_token", token);
-    console.log("User logged in with Google. Token:", token);
-  } else {
-    console.warn("No token found in URL");
+    localStorage.setItem('token', token);
+    Navigate('/dashboard');
   }
-}, []);
+}, [Navigate]);
+
+
+  const resetForm = () => {
+    setForm({
+      name: '',
+      dob: '',
+      email: '',
+      password: ''
+    });
+  };
 
    
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,9 +69,12 @@ const SignupPage = () => {
       alert(data.message || "Signup failed");
     } else {
       localStorage.setItem("auth_token", data.token); // ✅ store JWT
-      toast("Signup successful!");
-      //window.location.href = "/dashboard"; // ✅ Redirect
-      //Navigate('/si');
+      //toast("Signup successful!");
+      alert("signup successfull")
+        resetForm(); // Clear form after success
+      
+    
+       
     }
   } catch (error) {
     alert("Something went wrong");
@@ -173,6 +183,7 @@ const SignupPage = () => {
         </p>
       </div>
 
+ <div className="auth-image-side"></div>
       {/* Signin Popup */}
       {showSignin && <SigninPopup onClose={() => setShowSignin(false)} />}
     </div>

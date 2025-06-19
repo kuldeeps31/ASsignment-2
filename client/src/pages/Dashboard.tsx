@@ -3,7 +3,6 @@ import { FiPlus, FiTrash2, FiLogOut } from 'react-icons/fi';
 import '../styles/Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-//import jwtde from 'jwt-decode';
 import { jwtDecode } from 'jwt-decode';
 
 interface Note {
@@ -26,55 +25,72 @@ const Dashboard: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newNote, setNewNote] = useState('');
-   const [userName, setUserName] = useState('Guest');
+  const [userName, setUserName] = useState('Guest');
   const [userEmail, setUserEmail] = useState('guest@example.com');
 
-
-  
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const decoded = jwtDecode<DecodedToken>(token);
-         console.log("Decoded Token:", decoded);
         setUserName(decoded.name);
-        console.log(decoded.name);
         setUserEmail(decoded.email);
       } catch (err) {
         console.error('Invalid token');
       }
     }
-
     fetchNotes();
   }, []);
 
-  // Fetch all notes
+  // ✅ GET notes
   const fetchNotes = async () => {
     try {
-      const res = await axios.get('http://localhost:9000/api/notes');
+      const token = localStorage.getItem("token");
+      const res = await axios.get('http://localhost:9000/api/notes', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setNotes(res.data);
     } catch (error) {
       console.error('Error fetching notes:', error);
     }
   };
 
-  // Create a new note
+  // ✅ CREATE note
   const handleCreateNote = async () => {
-    if (!newNote.trim()) return;
-    try {
-      const res = await axios.post('http://localhost:9000/api/notes', { text: newNote });
-      setNotes([res.data, ...notes]);
-      setNewNote('');
-      setIsCreating(false);
-    } catch (error) {
-      console.error('Error creating note:', error);
-    }
-  };
+  if (!newNote.trim()) return;
+  try {
+    const token = localStorage.getItem('token');
 
-  // Delete a note
+    const res = await axios.post(
+      'http://localhost:9000/api/notes',
+      { text: newNote },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setNotes([res.data, ...notes]);
+    setNewNote('');
+    setIsCreating(false);
+  } catch (error) {
+    console.error('Error creating note:', error);
+  }
+};
+
+
+  // ✅ DELETE note
   const handleDeleteNote = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:9000/api/notes/${id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:9000/api/notes/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setNotes(notes.filter(note => note._id !== id));
     } catch (error) {
       console.error('Error deleting note:', error);
@@ -86,10 +102,6 @@ const Dashboard: React.FC = () => {
     navigate("/");
   };
 
-  useEffect(() => {
-    fetchNotes();
-  }, []);
-
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
@@ -99,11 +111,10 @@ const Dashboard: React.FC = () => {
         </button>
       </header>
 
-          <div className="user-info">
+      <div className="user-info">
         <h2>Welcome, {userName}</h2>
         <p>{userEmail}</p>
       </div>
-
 
       {!isCreating && (
         <button onClick={() => setIsCreating(true)} className="create-note-btn">
