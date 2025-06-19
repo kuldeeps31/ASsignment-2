@@ -4,7 +4,7 @@ import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiCalendar, FiArrowRight } fro
 import SigninPopup from './SigninPage';
 import '../styles/Auth.css'
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 
 const SignupPage = () => {
   const [form, setForm] = useState({

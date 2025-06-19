@@ -4,11 +4,11 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    // ✅ Not logged in: redirect to "/"
+    //  Not logged in: redirect to "/"
     return <Navigate to="/" replace />;
   }
 
-  // ✅ Logged in
+  //  Logged in
   return children;
 };
 

@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
     fetchNotes();
   }, []);
 
-  // ✅ GET notes
+  //  GET notes
   const fetchNotes = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -57,7 +57,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // ✅ CREATE note
+  //  CREATE note
   const handleCreateNote = async () => {
   if (!newNote.trim()) return;
   try {
@@ -82,7 +82,7 @@ const Dashboard: React.FC = () => {
 };
 
 
-  // ✅ DELETE note
+  //  DELETE note
   const handleDeleteNote = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
