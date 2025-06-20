@@ -3,3 +3,6 @@ client/.env
 server/.env
 node_modules/
 dist/
+
+# .gitignore
+.env
