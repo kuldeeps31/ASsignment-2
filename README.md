@@ -73,3 +73,39 @@ cp .env.example .env
 # VITE_API_URL=http://localhost:9000/api
 npm install
 npm run dev
+
+
+✅ Usage
+Sign up at /signup (email/password)
+
+Or click “Continue with Google”
+
+On success you’ll be redirected to /dashboard
+
+Create, view, edit, and delete your notes
+
+notes
+
+🚢 Deployment
+Frontend
+Push the frontend folder to your GitHub repo.
+
+On Vercel or Netlify, select that repo & set VITE_API_URL env var.
+
+Deploy.
+
+Backend
+Push the backend folder to your GitHub repo.
+
+On Render or Heroku, create a new Node service.
+
+Build Command: npm install && npm run build
+
+Start Command: npm start
+
+Set environment variables: MONGO_URI, JWT_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET.
+
+Deploy.
+
+📜 License
+MIT © [kuldeep singh chouhan]
