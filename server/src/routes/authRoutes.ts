@@ -20,7 +20,8 @@ router.get(
     // req.user is set by Passport; cast to your User type
     const user = req.user as any;
     // Generate JWT containing at least the user id
-    const token = generateToken(user._id, user.name, user.email);
+    //const token = generateToken(user._id, user.name, user.email);
+    const token = generateToken( user.name, user.email);
     // Redirect to React with token as `token` query‑param
     res.redirect(`http://localhost:5173/signup?token=${token}`);
   }
