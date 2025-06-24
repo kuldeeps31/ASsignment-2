@@ -19,7 +19,7 @@
 /* Right Side - Image */
 .auth-image-side {
   flex: 1;
-  background: url('src/assets/image.png') center/cover no-repeat;
+  background: url('/image.png') center/cover no-repeat;
   display: none;
 }
 

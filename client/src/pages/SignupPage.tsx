@@ -5,6 +5,7 @@ import SigninPopup from './SigninPage';
 import '../styles/Auth.css'
 import { useNavigate } from 'react-router-dom';
 //import { toast } from 'react-toastify';
+//import {logo} from '../assets/image.png'
 
 const SignupPage = () => {
   const [form, setForm] = useState({
