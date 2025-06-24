@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export interface IUser extends Document {
   name: string;

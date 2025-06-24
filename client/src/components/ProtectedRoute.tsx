@@ -1,6 +1,10 @@
 import { Navigate } from "react-router-dom";
+//import { JSX } from "react";
+//import { JSX } from "react/jsx-runtime";
+import type { ReactElement } from "react";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+
+const ProtectedRoute = ({ children }: { children: ReactElement }) => {
   const token = localStorage.getItem("token");
 
   if (!token) {

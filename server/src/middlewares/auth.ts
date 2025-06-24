@@ -7,7 +7,7 @@ export interface AuthenticatedRequest extends Request {
   user?: IUser & { _id: string };
 }
 
-export const protect = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+export const auth = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {

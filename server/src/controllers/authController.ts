@@ -3,7 +3,9 @@ import User from "../models/User";
 import { generateToken } from "../utils/generateToken";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs"; 
-export const signup = async (req: Request, res: Response) => {
+
+
+export const signup = async (req: Request, res: Response): Promise<Response> => {
   const { name, dob, email, password } = req.body;
 
   if (!name || !dob || !email || !password) {
@@ -42,7 +44,8 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+
+export const login = async (req: Request, res: Response)  => {
   const { email, password, rememberMe } = req.body;
 
   if (!email || !password)

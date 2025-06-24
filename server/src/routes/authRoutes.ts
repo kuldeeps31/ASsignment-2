@@ -2,11 +2,13 @@ import express from "express";
 import { signup,login } from "../controllers/authController";
 import passport from 'passport';
 import { generateToken } from '../utils/generateToken'; 
+import { IUser } from "../interfaces/IUser";
+import { sign } from "crypto";
 
 const router = express.Router();
 
 router.post("/signup", signup);
-router.post("/login", login); // ✅ This must exist
+router.post("/login", login); //  This must exist
 
 router.get(
   '/google',
